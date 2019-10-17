@@ -12,13 +12,14 @@ const upload = new multer(uploadsConfig);
 
 routes.get('/posts', PostController.index)
 routes.get('/users', UserController.index);
+routes.get('/users/:id', UserController.getById);
 
 routes.post('/posts', upload.single('image'), PostController.store);
 
 routes.post('/users', UserController.store);
 
 routes.post('/posts/:id/like', LikeController.store);
-routes.post('/posts/:id/point', RankingController.store);
+routes.post('/users/:id/point', RankingController.store);
 
 routes.delete("/posts/:id", PostController.delete);
 routes.delete("/users/:id", UserController.delete);

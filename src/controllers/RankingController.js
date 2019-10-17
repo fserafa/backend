@@ -1,15 +1,15 @@
-const Post = require('../models/Post');
+const User = require('../models/User');
 
 module.exports = {
     async store(req, res) {
-        const post = await Post.findById(req.params.id);
+        const user = await User.findById(req.params.id);
 
-        post.points += 1;
+        user.points += 1;
 
-        await post.save();
+        await user.save();
 
-        req.io.emit('point', post);
+        req.io.emit('point', user);
 
-        return res.json(post);
+        return res.json(user);
     }
 };  

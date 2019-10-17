@@ -2,9 +2,15 @@ const User = require('../models/User');
 
 module.exports = {
     async index(req, res) {
-        const users = await User.find().sort('-createdAt');
+        const users = await User.find().sort({ points: -1});
 
         return res.json(users);
+    },
+
+    async getById(req, res) {
+        const user = await User.findById(req.params.id);
+
+        return res.json(user);
     },
 
     async store(req, res) {
