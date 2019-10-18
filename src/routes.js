@@ -15,8 +15,9 @@ routes.get('/users', UserController.index);
 routes.get('/users/:id', UserController.getById);
 
 routes.post('/posts', upload.single('image'), PostController.store);
-
 routes.post('/users', upload.single('image'), UserController.store);
+
+routes.post('/users/:id/point', RankingController.update);
 
 routes.post('/posts/:id/like', LikeController.store);
 routes.post('/users/:id/point', RankingController.store);
