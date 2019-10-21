@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const PostSchema = new mongoose.Schema({
     author: String,
-    place: String,
+    authorId: String,
     description: String,
     hashtags: String,
     image: String,
@@ -10,11 +10,7 @@ const PostSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    points: {
-        type: Number,
-        default: 0
-    }
-}, {
+  }, {
     timestamps: true,
 });
 
