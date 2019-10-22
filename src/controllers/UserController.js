@@ -9,14 +9,16 @@ module.exports = {
         const users = await User.find()
             .sort({ points: -1 })
             .populate('posts')
-        
+
         return res.json(users);
     },
 
     async getById(req, res) {
-        const user = await User.findById(req.params.id).populate('posts');
+        const user = await User.findById(req.params.id)
+            .sort('-createdAt')
+            .populate('posts'); 
 
-        return res.json(user); 
+        return res.json(user);
     },
 
     async store(req, res) {
