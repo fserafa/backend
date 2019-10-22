@@ -6,15 +6,17 @@ const fs = require('fs');
 
 module.exports = {
     async index(req, res) {
-        const users = await User.find().sort({ points: -1});
-
+        const users = await User.find()
+            .sort({ points: -1 })
+            .populate('posts')
+        
         return res.json(users);
     },
 
     async getById(req, res) {
-        const user = await User.findById(req.params.id);
+        const user = await User.findById(req.params.id).populate('posts');
 
-        return res.json(user);
+        return res.json(user); 
     },
 
     async store(req, res) {
@@ -36,7 +38,7 @@ module.exports = {
         const user = await User.create({
             login,
             password,
-            name, 
+            name,
             profilePicture: fileName
         });
 
@@ -62,7 +64,7 @@ module.exports = {
             )
 
         fs.unlinkSync(req.file.path);
-        
+
         const post = await Post.create({
             author,
             authorId,
@@ -81,18 +83,18 @@ module.exports = {
         return res.json(user);
         // handleSubmit = async e => {
         //     e.preventDefault();
-    
+
         //     const data = new FormData();
-    
+
         //     data.append('image', this.state.image);
         //     data.append('authorId', *authorId*);
         //     data.append('author', this.state.author);
         //     data.append('place', this.state.place);
         //     data.append('description', this.state.description);
         //     data.append('hashtags', this.state.hashtags);
-    
+
         //     await api.put('users', data);
-    
+
         //     this.props.history.push('/');
         // }
     },
@@ -100,7 +102,7 @@ module.exports = {
     async delete(req, res) {
         const user = await User.findById(req.params.id);
 
-        await user.remove(); 
+        await user.remove();
 
         return res.send();
     }
