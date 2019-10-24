@@ -15,13 +15,17 @@ module.exports = {
 
     async getById(req, res) {
         const user = await User.findById(req.params.id)
-            .sort('-createdAt')
-            .populate('posts'); 
+            .populate('posts')
+            .sort('-createdAt');
+
+        user.posts = user.posts.sort((a, b) => {
+            return b.createdAt - a.createdAt;
+        }); 
 
         return res.json(user);
-    },
+    }, 
 
-    async store(req, res) {
+    async store(req, res) { 
         const { login, password, name } = req.body;
         const { filename: profilePicture } = req.file;
 
@@ -80,25 +84,9 @@ module.exports = {
 
         await user.save();
 
-        req.io.emit('newPost', user);
+        req.io.emit('newPost', post);
 
         return res.json(user);
-        // handleSubmit = async e => {
-        //     e.preventDefault();
-
-        //     const data = new FormData();
-
-        //     data.append('image', this.state.image);
-        //     data.append('authorId', *authorId*);
-        //     data.append('author', this.state.author);
-        //     data.append('place', this.state.place);
-        //     data.append('description', this.state.description);
-        //     data.append('hashtags', this.state.hashtags);
-
-        //     await api.put('users', data);
-
-        //     this.props.history.push('/');
-        // }
     },
 
     async delete(req, res) {
