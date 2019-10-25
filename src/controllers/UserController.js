@@ -5,7 +5,7 @@ const fs = require('fs');
 
 module.exports = {
     async index(req, res) {
-        const users = await User.find().sort({ points: -1});
+        const users = await User.find().sort({ points: -1 });
 
         return res.json(users);
     },
@@ -35,7 +35,7 @@ module.exports = {
         const user = await User.create({
             login,
             password,
-            name, 
+            name,
             profilePicture: fileName
         });
 
@@ -54,28 +54,40 @@ module.exports = {
         req.io.emit('newPost', user);
 
         return res.json(user);
-        // handleSubmit = async e => {
-        //     e.preventDefault();
-    
-        //     const data = new FormData();
-    
-        //     data.append('image', this.state.image);
-        //     data.append('authorId', *authorId*);
-        //     data.append('author', this.state.author);
-        //     data.append('place', this.state.place);
-        //     data.append('description', this.state.description);
-        //     data.append('hashtags', this.state.hashtags);
-    
-        //     await api.put('users', data);
-    
-        //     this.props.history.push('/');
-        // }
+    },
+
+    async editUser(req, res) {
+        const { name } = req.body;
+        const { filename: profilePicture } = req.file;
+
+        const user = await User.findById(req.params.id);
+
+        const [fname] = profilePicture.split('.');
+        const fileName = `${fname}.jpg`;
+
+        await sharp(req.file.path)
+            .resize(500)
+            .jpeg({ quality: 70 })
+            .toFile(
+                path.resolve(req.file.destination, 'resized', fileName)
+            )
+
+        fs.unlinkSync(req.file.path);
+
+        user.name = name
+        user.profilePicture = { profilePicture: fileName }
+
+        await user.save();
+
+        req.io.emit('update', user);
+
+        return res.json(user);
     },
 
     async delete(req, res) {
         const user = await User.findById(req.params.id);
 
-        await user.remove(); 
+        await user.remove();
 
         return res.send();
     }

@@ -19,6 +19,7 @@ routes.post('/users', upload.single('profilePicture'), UserController.store);
 
 routes.put('/users/:id/point', upload.single('image'), RankingController.update);
 routes.put('/users/:id/newpost', upload.single('image'), UserController.newPost);
+routes.put('/users/:id/update', upload.single('profilePicture'), UserController.editUser);
 
 routes.post('/posts/:id/like', LikeController.store);
 routes.post('/users/:id/point', RankingController.store);
