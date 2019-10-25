@@ -7,25 +7,26 @@ const fs = require('fs');
 module.exports = {
     async index(req, res) {
         const users = await User.find()
-            .sort({ points: -1 })
             .populate('posts')
+            .sort({ points: -1 })
 
+ 
         return res.json(users);
     },
 
     async getById(req, res) {
         const user = await User.findById(req.params.id)
-            .populate('posts')
+            .populate('posts') 
             .sort('-createdAt');
 
         user.posts = user.posts.sort((a, b) => {
             return b.createdAt - a.createdAt;
-        }); 
+        });
 
         return res.json(user);
-    }, 
+    },
 
-    async store(req, res) { 
+    async store(req, res) {
         const { login, password, name } = req.body;
         const { filename: profilePicture } = req.file;
 
@@ -56,7 +57,7 @@ module.exports = {
     async newPost(req, res) {
         const { author, authorId, place, description, hashtags } = req.body;
         const { filename: image } = req.file;
-
+        
         const user = await User.findById(req.params.id);
 
         const [name] = image.split('.');
