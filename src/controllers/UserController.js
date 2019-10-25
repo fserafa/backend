@@ -108,8 +108,8 @@ module.exports = {
 
         fs.unlinkSync(req.file.path);
 
-        user.name = name
-        user.profilePicture = { profilePicture: fileName }
+        user.name = name;
+        user.profilePicture = fileName; 
 
         await user.save();
 
